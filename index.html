@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMA 1 Sayung - Sistem Informasi Sekolah & Absensi Terintegrasi</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1a5276 0%, #2e86c1 100%);
+            --primary-color: #2e86c1;
+            --success-color: #27ae60;
+            --info-color: #17a2b8;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --dark-bg: #1a1a2e;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', 'Poppins', sans-serif;
+            background: #f5f6fa;
+            overflow-x: hidden;
+        }
+        
+        .home-page { display: block; }
+        .dashboard-page { display: none; }
+        
+        /* Navbar */
+        .navbar-modern {
+            background: rgba(26, 82, 118, 0.97);
+            backdrop-filter: blur(20px);
+            padding: 10px 0;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+        
+        .navbar-modern.scrolled {
+            padding: 6px 0;
+            background: rgba(26, 82, 118, 0.99);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .navbar-brand-modern {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .navbar-brand-modern img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid white;
+            object-fit: cover;
+        }
+        
+        .navbar-brand-modern .brand-text {
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            line-height: 1.2;
+        }
+        
+        .navbar-brand-modern .brand-text small {
+            font-weight: 400;
+            font-size: 0.75rem;
+            display: block;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .nav-link-modern {
+            color: rgba(255,255,255,0.85) !important;
+            font-weight: 500;
+            padding: 8px 14px !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .nav-link-modern:hover {
+            color: white !important;
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .btn-login-nav {
+            background: white;
+            border: none;
+            color: #1a5276;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-login-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255,255,255,0.3);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(180deg, #1a5276 0%, #2e86c1 100%);
+            padding: 150px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 6px 16px;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1.2;
+            margin-bottom: 18px;
+        }
+        
+        .hero-title span {
+            color: #f9e79f;
+        }
+        
+        .hero-desc {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+        
+        .hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+        
+        .btn-hero-primary {
+            background: white;
+            color: #1a5276;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-hero-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .btn-hero-outline {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.5);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-hero-outline:hover {
+            border-color: white;
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .hero-stats { display: flex; gap: 30px; margin-top: 35px; flex-wrap: wrap; }
+        .hero-stat-item { text-align: center; }
+        .hero-stat-number { font-size: 1.8rem; font-weight: 700; color: #f9e79f; }
+        .hero-stat-label { color: rgba(255,255,255,0.8); font-size: 0.85rem; }
+        
+        /* Logo Sekolah di Hero */
+        .school-logo-hero {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 5px solid #f9e79f;
+        }
+        
+        .school-logo-hero img {
+            width: 85%;
+            height: 85%;
+            object-fit: contain;
+        }
+        
+        /* Stats Section */
+        .stats-section { padding: 60px 0; margin-top: -40px; position: relative; z-index: 2; }
+        
+        .stat-card-modern {
+            background: white;
+            border-radius: 16px;
+            padding: 25px 20px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            text-align: center;
+            height: 100%;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+        
+        .stat-card-modern:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        
+        .stat-icon-modern {
+            width: 60px; height: 60px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 15px; font-size: 1.5rem; color: white;
+        }
+        
+        .stat-icon-modern.blue { background: linear-gradient(135deg, #1a5276, #2e86c1); }
+        .stat-icon-modern.green { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+        .stat-icon-modern.orange { background: linear-gradient(135deg, #e67e22, #f39c12); }
+        .stat-icon-modern.purple { background: linear-gradient(135deg, #8e44ad, #9b59b6); }
+        .stat-icon-modern.red { background: linear-gradient(135deg, #e74c3c, #ec7063); }
+        
+        .stat-number-modern { font-size: 2rem; font-weight: 700; color: #1a1a2e; margin-bottom: 5px; }
+        .stat-label-modern { color: #666; font-weight: 500; font-size: 0.9rem; }
+        
+        /* Kata Pengantar */
+        .pengantar-section {
+            padding: 60px 0;
+            background: white;
+        }
+        
+        .pengantar-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 20px;
+            padding: 40px;
+            border-left: 5px solid #1a5276;
+        }
+        
+        .kepsek-foto {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #1a5276;
+        }
+        
+        /* Guru Section */
+        .guru-section { padding: 60px 0; background: #f8f9fc; }
+        .section-title { font-size: 2rem; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; }
+        .section-subtitle { color: #666; font-size: 1rem; max-width: 600px; margin: 0 auto 40px; }
+        
+        .guru-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.04);
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .guru-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border-color: #1a5276;
+        }
+        
+        .guru-avatar {
+            width: 90px; height: 90px; border-radius: 50%;
+            margin: 0 auto 15px; background: #e9ecef;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: #1a5276; overflow: hidden;
+            border: 3px solid #1a5276;
+        }
+        
+        .guru-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .guru-nama { font-weight: 700; font-size: 1rem; color: #1a1a2e; }
+        .guru-mapel { color: #2e86c1; font-weight: 500; font-size: 0.85rem; }
+        .guru-badge-jabatan {
+            display: inline-block;
+            background: #1a5276;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            margin-top: 5px;
+        }
+        
+        /* Features Section */
+        .features-section { padding: 60px 0; background: white; }
+        
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px 25px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            text-align: center;
+            height: 100%;
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+        
+        .feature-card:hover {
+            background: #1a5276;
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .feature-card:hover .feature-icon,
+        .feature-card:hover .feature-title,
+        .feature-card:hover .feature-text { color: white; }
+        
+        .feature-icon { font-size: 2.5rem; color: #1a5276; margin-bottom: 15px; transition: all 0.3s ease; }
+        .feature-title { font-weight: 600; font-size: 1.2rem; margin-bottom: 10px; color: #1a1a2e; transition: all 0.3s ease; }
+        .feature-text { color: #666; font-size: 0.9rem; transition: all 0.3s ease; }
+        
+        /* Footer */
+        .footer-modern {
+            background: #1a5276;
+            color: white;
+            padding: 60px 0 25px;
+        }
+        
+        .footer-modern h5 { font-weight: 700; margin-bottom: 20px; font-size: 1.1rem; }
+        
+        .footer-modern a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .footer-modern a:hover { color: white; padding-left: 5px; }
+        
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            margin-right: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn:hover {
+            background: white;
+            color: #1a5276;
+            transform: translateY(-3px);
+        }
+        
+        /* Dashboard Styles */
+        .dashboard-container { display: flex; min-height: 100vh; }
+        
+        .sidebar-dashboard {
+            width: 260px;
+            background: #1a5276;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header-dashboard {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-user-dashboard {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .avatar-dashboard {
+            width: 65px; height: 65px; border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            margin: 0 auto 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; cursor: pointer;
+            overflow: hidden; border: 2px solid rgba(255,255,255,0.5);
+        }
+        
+        .avatar-dashboard img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .nav-link-dashboard {
+            color: rgba(255,255,255,0.8) !important;
+            padding: 11px 20px;
+            display: flex; align-items: center;
+            transition: all 0.3s ease; cursor: pointer;
+            border-left: 3px solid transparent;
+            font-size: 0.88rem; text-decoration: none;
+        }
+        
+        .nav-link-dashboard i { margin-right: 10px; font-size: 1.1rem; width: 22px; text-align: center; }
+        
+        .nav-link-dashboard:hover, .nav-link-dashboard.active {
+            background: rgba(255,255,255,0.15);
+            color: white !important;
+            border-left-color: #f9e79f;
+        }
+        
+        .main-content-dashboard {
+            margin-left: 260px;
+            flex: 1;
+            padding: 25px;
+            background: #f5f6fa;
+            min-height: 100vh;
+        }
+        
+        .topbar-dashboard {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
+            display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap; gap: 12px;
+        }
+        
+        .btn-logout-dashboard {
+            background: #e74c3c;
+            color: white; border: none;
+            padding: 8px 18px; border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-logout-dashboard:hover { background: #c0392b; color: white; }
+        
+        @media (max-width: 992px) {
+            .sidebar-dashboard { transform: translateX(-100%); }
+            .sidebar-dashboard.show { transform: translateX(0); }
+            .main-content-dashboard { margin-left: 0; }
+            .hero-title { font-size: 2.2rem; }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-title { font-size: 1.8rem; }
+            .hero-section { padding: 120px 0 60px; }
+            .school-logo-hero { width: 120px; height: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- HOME PAGE -->
+    <div class="home-page" id="homePage">
+        <nav class="navbar navbar-expand-lg navbar-modern fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand-modern" href="#">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23fff'/%3E%3Ctext x='50' y='65' text-anchor='middle' font-size='50' fill='%231a5276' font-weight='bold'%3E1%3C/text%3E%3C/svg%3E" alt="Logo SMA 1 Sayung" id="logoNavbar">
+                    <span class="brand-text">SMA 1 SAYUNG<br><small>Kabupaten Demak</small></span>
+                </a>
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                    <i class="bi bi-list text-white" style="font-size:1.5rem;"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav ms-auto align-items-lg-center">
+                        <li class="nav-item"><a class="nav-link nav-link-modern" href="#home">Beranda</a></li>
+                        <li class="nav-item"><a class="nav-link nav-link-modern" href="#pengantar">Kata Pengantar</a></li>
+                        <li class="nav-item"><a class="nav-link nav-link-modern" href="#stats">Statistik</a></li>
+                        <li class="nav-item"><a class="nav-link nav-link-modern" href="#guru">Guru & Staff</a></li>
+                        <li class="nav-item"><a class="nav-link nav-link-modern" href="#features">Fitur</a></li>
+                        <li class="nav-item"><a class="nav-link nav-link-modern" href="#contact">Kontak</a></li>
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            <button class="btn btn-login-nav" onclick="openLoginModal()"><i class="bi bi-box-arrow-in-right"></i> Masuk</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <section class="hero-section" id="home">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-7">
+                        <div class="hero-badge"><i class="bi bi-star-fill"></i> Sekolah Unggulan Kabupaten Demak</div>
+                        <h1 class="hero-title">SMA 1 <span>Sayung</span><br>Berprestasi & Berkarakter</h1>
+                        <p class="hero-desc">Mewujudkan generasi unggul yang beriman, berilmu, dan berakhlak mulia melalui pendidikan berkualitas dan teknologi modern.</p>
+                        <div class="hero-buttons">
+                            <button class="btn btn-hero-primary" onclick="openLoginModal()"><i class="bi bi-rocket-takeoff"></i> Akses Sistem</button>
+                            <button class="btn btn-hero-outline" onclick="document.getElementById('pengantar').scrollIntoView({behavior:'smooth'})"><i class="bi bi-book"></i> Kata Pengantar</button>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="hero-stat-item"><div class="hero-stat-number counter" data-target="1250">0</div><div class="hero-stat-label">Siswa Aktif</div></div>
+                            <div class="hero-stat-item"><div class="hero-stat-number counter" data-target="45">0</div><div class="hero-stat-label">Guru</div></div>
+                            <div class="hero-stat-item"><div class="hero-stat-number counter" data-target="20">0</div><div class="hero-stat-label">Staff</div></div>
+                            <div class="hero-stat-item"><div class="hero-stat-number counter" data-target="36">0</div><div class="hero-stat-label">Ruang Kelas</div></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 text-center mt-4 mt-lg-0">
+                        <div class="school-logo-hero">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231a5276'/%3E%3Ctext x='50' y='65' text-anchor='middle' font-size='45' fill='white' font-weight='bold'%3E1%3C/text%3E%3Ctext x='50' y='85' text-anchor='middle' font-size='12' fill='%23f9e79f'%3ESAYUNG%3C/text%3E%3C/svg%3E" alt="Logo SMA 1 Sayung" id="logoHero">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kata Pengantar Kepala Sekolah -->
+        <section class="pengantar-section" id="pengantar">
+            <div class="container">
+                <div class="text-center mb-4" data-aos="fade-up">
+                    <h2 class="section-title">Kata Pengantar Kepala Sekolah</h2>
+                </div>
+                <div class="pengantar-card" data-aos="fade-up">
+                    <div class="row align-items-center">
+                        <div class="col-md-3 text-center mb-3 mb-md-0">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23e9ecef'/%3E%3Ctext x='50' y='65' text-anchor='middle' font-size='40' fill='%231a5276'%3EKS%3C/text%3E%3C/svg%3E" alt="Kepala Sekolah" class="kepsek-foto" id="kepsekFoto">
+                            <h5 class="mt-2" id="kepsekNama">Drs. H. Ahmad Fauzi, M.Pd.</h5>
+                            <small class="text-muted" id="kepsekNip">NIP. 19651231 199003 1 015</small>
+                        </div>
+                        <div class="col-md-9">
+                            <p class="text-justify" id="kepsekPengantar">
+                                <i class="bi bi-quote fs-3 text-primary"></i><br>
+                                Assalamu'alaikum Warahmatullahi Wabarakatuh,<br><br>
+                                Puji syukur kehadirat Allah SWT atas rahmat dan karunia-Nya sehingga website SMA 1 Sayung dapat hadir sebagai sarana informasi dan komunikasi bagi seluruh warga sekolah dan masyarakat. SMA 1 Sayung terus berkomitmen untuk memberikan pendidikan terbaik bagi putra-putri bangsa. Dengan dukungan teknologi modern, kami berharap dapat meningkatkan kualitas pembelajaran dan pelayanan kepada seluruh stakeholder.<br><br>
+                                Wassalamu'alaikum Warahmatullahi Wabarakatuh.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-section" id="stats">
+            <div class="container">
+                <div class="row g-3">
+                    <div class="col-lg-2 col-md-4 col-6" data-aos="fade-up" data-aos-delay="100"><div class="stat-card-modern"><div class="stat-icon-modern blue"><i class="bi bi-people-fill"></i></div><div class="stat-number-modern counter" data-target="1250">0</div><div class="stat-label-modern">Siswa Aktif</div></div></div>
+                    <div class="col-lg-2 col-md-4 col-6" data-aos="fade-up" data-aos-delay="200"><div class="stat-card-modern"><div class="stat-icon-modern green"><i class="bi bi-person-workspace"></i></div><div class="stat-number-modern counter" data-target="45">0</div><div class="stat-label-modern">Guru</div></div></div>
+                    <div class="col-lg-2 col-md-4 col-6" data-aos="fade-up" data-aos-delay="300"><div class="stat-card-modern"><div class="stat-icon-modern orange"><i class="bi bi-person-badge"></i></div><div class="stat-number-modern counter" data-target="20">0</div><div class="stat-label-modern">Staff</div></div></div>
+                    <div class="col-lg-3 col-md-6 col-6" data-aos="fade-up" data-aos-delay="400"><div class="stat-card-modern"><div class="stat-icon-modern purple"><i class="bi bi-door-open-fill"></i></div><div class="stat-number-modern counter" data-target="36">0</div><div class="stat-label-modern">Ruang Kelas</div></div></div>
+                    <div class="col-lg-3 col-md-6 col-12" data-aos="fade-up" data-aos-delay="500"><div class="stat-card-modern"><div class="stat-icon-modern red"><i class="bi bi-mortarboard-fill"></i></div><div class="stat-number-modern counter" data-target="3500">0</div><div class="stat-label-modern">Alumni</div></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="guru-section" id="guru">
+            <div class="container">
+                <div class="text-center" data-aos="fade-up"><h2 class="section-title">Guru & Staff SMA 1 Sayung</h2><p class="section-subtitle">Klik foto untuk melihat detail profil</p></div>
+                <div class="row g-4" id="guruList"></div>
+            </div>
+        </section>
+
+        <section class="features-section" id="features">
+            <div class="container">
+                <div class="text-center" data-aos="fade-up"><h2 class="section-title">Fitur Sistem</h2><p class="section-subtitle">Teknologi modern untuk mendukung kegiatan sekolah</p></div>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up"><div class="feature-card" onclick="openLoginModal()"><div class="feature-icon"><i class="bi bi-calendar-check"></i></div><h5 class="feature-title">Absensi GPS</h5><p class="feature-text">Absensi dengan GPS dalam radius 8010 m² area sekolah</p></div></div>
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up"><div class="feature-card" onclick="openLoginModal()"><div class="feature-icon"><i class="bi bi-graph-up"></i></div><h5 class="feature-title">Manajemen Nilai</h5><p class="feature-text">Pengelolaan nilai UTS, UAS dengan analitik lengkap</p></div></div>
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up"><div class="feature-card" onclick="openLoginModal()"><div class="feature-icon"><i class="bi bi-camera-video"></i></div><h5 class="feature-title">CCTV Monitoring</h5><p class="feature-text">Pantau kegiatan sekolah real-time 24 jam</p></div></div>
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up"><div class="feature-card" onclick="openLoginModal()"><div class="feature-icon"><i class="bi bi-shield-check"></i></div><h5 class="feature-title">Ujian Online</h5><p class="feature-text">Sistem ujian dengan keamanan anti-kecurangan</p></div></div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer-modern" id="contact">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='white'/%3E%3Ctext x='50' y='65' text-anchor='middle' font-size='50' fill='%231a5276' font-weight='bold'%3E1%3C/text%3E%3C/svg%3E" alt="Logo" style="width:50px;height:50px;border-radius:50%;">
+                            <h5 class="mb-0">SMA 1 SAYUNG</h5>
+                        </div>
+                        <p class="text-white-50">Sekolah unggulan di Kabupaten Demak yang berkomitmen mencetak generasi berprestasi dan berkarakter.</p>
+                        <div class="mt-3">
+                            <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+                            <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+                            <a href="#" class="social-btn"><i class="bi bi-youtube"></i></a>
+                            <a href="#" class="social-btn"><i class="bi bi-globe"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6"><h5>Menu</h5><a href="#home">Beranda</a><a href="#pengantar">Kata Pengantar</a><a href="#stats">Statistik</a><a href="#guru">Guru</a></div>
+                    <div class="col-lg-3 col-md-6"><h5>Kontak</h5><p class="text-white-50"><i class="bi bi-geo-alt"></i> Jl. Raya Sayung No. 123, Demak</p><p class="text-white-50"><i class="bi bi-telephone"></i> (0291) 123456</p><p class="text-white-50"><i class="bi bi-envelope"></i> sma1sayung@sch.id</p></div>
+                    <div class="col-lg-3 col-md-6"><h5>Jam Operasional</h5><p class="text-white-50">Senin - Jumat: 07:00 - 16:00</p><p class="text-white-50">Sabtu: 07:00 - 12:00</p></div>
+                </div>
+                <hr style="border-color: rgba(255,255,255,0.2);" class="mt-4">
+                <p class="text-center text-white-50 mb-0">&copy; 2024 SMA 1 Sayung. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div class="dashboard-page" id="dashboardPage">
+        <div class="dashboard-container">
+            <div class="sidebar-dashboard" id="sidebarDashboard">
+                <div class="sidebar-header-dashboard">
+                    <div class="d-flex align-items-center justify-content-center gap-2">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='white'/%3E%3Ctext x='50' y='65' text-anchor='middle' font-size='50' fill='%231a5276' font-weight='bold'%3E1%3C/text%3E%3C/svg%3E" alt="Logo" style="width:35px;height:35px;border-radius:50%;">
+                        <div class="text-start"><strong>SMA 1 SAYUNG</strong><br><small class="text-white-50">Dashboard v2.0</small></div>
+                    </div>
+                </div>
+                <div class="sidebar-user-dashboard">
+                    <div class="avatar-dashboard" onclick="changeProfilePhoto()"><i class="bi bi-person" id="avatarIconDashboard"></i><img id="avatarImageDashboard" style="display:none;"></div>
+                    <div class="text-white fw-bold mt-2" id="sidebarUserName">User</div>
+                    <small class="text-white-50" id="sidebarUserRole">Role</small>
+                </div>
+                <div class="nav flex-column" id="sidebarNavDashboard"></div>
+                <div class="p-3 mt-auto"><button class="btn btn-logout-dashboard w-100" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Keluar</button></div>
+            </div>
+            <div class="main-content-dashboard" id="mainContentDashboard">
+                <div class="topbar-dashboard">
+                    <div><h5 class="mb-0" id="pageTitleDashboard">Dashboard</h5><small class="text-muted" id="currentDateDashboard"></small></div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <button class="btn btn-light d-lg-none" onclick="document.getElementById('sidebarDashboard').classList.toggle('show')"><i class="bi bi-list"></i></button>
+                        <span class="badge bg-danger rounded-pill">3</span>
+                    </div>
+                </div>
+                <div id="dynamicContentDashboard"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 overflow-hidden">
+                <div class="modal-header border-0 text-white" style="background: linear-gradient(135deg, #1a5276, #2e86c1);">
+                    <h5 class="modal-title"><i class="bi bi-shield-lock"></i> Login Sistem</h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="loginForm">
+                        <div class="mb-3"><label class="form-label fw-semibold">Username</label><input type="text" class="form-control" id="loginUsername" required></div>
+                        <div class="mb-3"><label class="form-label fw-semibold">Password</label><div class="input-group"><input type="password" class="form-control" id="loginPassword" required><button class="btn btn-outline-secondary" type="button" onclick="togglePass()"><i class="bi bi-eye" id="eyeIconLogin"></i></button></div></div>
+                        <div class="mb-3"><label class="form-label fw-semibold">Role</label><select class="form-select" id="loginRole"><option value="admin">Admin</option><option value="guru">Guru</option><option value="staff">Staff</option><option value="orangtua">Orang Tua</option><option value="siswa">Siswa</option></select></div>
+                        <button type="submit" class="btn w-100 text-white fw-semibold" style="background: linear-gradient(135deg, #1a5276, #2e86c1); padding: 12px; border-radius: 10px;"><i class="bi bi-box-arrow-in-right"></i> Masuk</button>
+                    </form>
+                    <div class="text-center mt-3"><a href="#" class="text-decoration-none small" onclick="openRegisterModal()"><i class="bi bi-person-plus"></i> Daftar Siswa Baru</a></div>
+                    <div class="text-center mt-2"><small class="text-muted">Password: rafli purnomo041206@_!</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4 overflow-hidden">
+                <div class="modal-header border-0 text-white" style="background: linear-gradient(135deg, #1a5276, #2e86c1);"><h5 class="modal-title"><i class="bi bi-person-plus"></i> Pendaftaran Siswa Baru</h5><button class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body p-4">
+                    <form id="registerForm">
+                        <h6 class="fw-bold mb-3">Data Diri Calon Siswa</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3"><label class="form-label">Nama Lengkap <span class="text-danger">*</span></label><input type="text" class="form-control" id="regNamaLengkap" required></div>
+                            <div class="col-md-6 mb-3"><label class="form-label">NISN</label><input type="text" class="form-control" id="regNISN"></div>
+                            <div class="col-md-4 mb-3"><label class="form-label">Tempat Lahir <span class="text-danger">*</span></label><input type="text" class="form-control" id="regTempatLahir" required></div>
+                            <div class="col-md-4 mb-3"><label class="form-label">Tanggal Lahir <span class="text-danger">*</span></label><input type="date" class="form-control" id="regTanggalLahir" required></div>
+                            <div class="col-md-4 mb-3"><label class="form-label">No WhatsApp <span class="text-danger">*</span></label><input type="tel" class="form-control" id="regNoWA" required></div>
+                        </div>
+                        <hr><h6 class="fw-bold mb-3">Data Sekolah & Orang Tua</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3"><label class="form-label">Asal SMP/MTs <span class="text-danger">*</span></label><input type="text" class="form-control" id="regAsalSekolah" required></div>
+                            <div class="col-md-6 mb-3"><label class="form-label">Tahun Lulus <span class="text-danger">*</span></label><input type="number" class="form-control" id="regTahunLulus" required></div>
+                            <div class="col-md-6 mb-3"><label class="form-label">Nama Orang Tua (sesuai rapor) <span class="text-danger">*</span></label><input type="text" class="form-control" id="regNamaOrtu" required></div>
+                            <div class="col-md-6 mb-3"><label class="form-label">No HP Orang Tua</label><input type="tel" class="form-control" id="regNoHPOrtu"></div>
+                        </div>
+                        <button type="submit" class="btn w-100 text-white fw-semibold" style="background: linear-gradient(135deg, #1a5276, #2e86c1); padding: 12px; border-radius: 10px;"><i class="bi bi-send"></i> Daftar & Verifikasi WhatsApp</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Guru -->
+    <div class="modal fade" id="detailGuruModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 overflow-hidden">
+                <div class="modal-header border-0 text-white" style="background: linear-gradient(135deg, #1a5276, #2e86c1);">
+                    <h5 class="modal-title"><i class="bi bi-person-vcard"></i> Detail Profil</h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4 text-center" id="detailGuruContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="photoInputDashboard" accept="image/*" style="display:none;" onchange="handlePhotoUploadDashboard(event)">
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        const SCHOOL_CENTER = { lat: -6.2088, lng: 106.8456 };
+        const SCHOOL_RADIUS_M2 = 8010;
+        const SCHOOL_RADIUS_M = Math.sqrt(SCHOOL_RADIUS_M2 / Math.PI);
+        const MASTER_PASSWORD = 'rafli purnomo041206@_!';
+        
+        const defaultDatabase = {
+            pengantar: {
+                kepsek_nama: 'Drs. H. Ahmad Fauzi, M.Pd.',
+                kepsek_nip: '19651231 199003 1 015',
+                kepsek_foto: null,
+                pengantar: 'Assalamu\'alaikum Warahmatullahi Wabarakatuh,\n\nPuji syukur kehadirat Allah SWT atas rahmat dan karunia-Nya sehingga website SMA 1 Sayung dapat hadir sebagai sarana informasi dan komunikasi bagi seluruh warga sekolah dan masyarakat. SMA 1 Sayung terus berkomitmen untuk memberikan pendidikan terbaik bagi putra-putri bangsa. Dengan dukungan teknologi modern, kami berharap dapat meningkatkan kualitas pembelajaran dan pelayanan kepada seluruh stakeholder.\n\nWassalamu\'alaikum Warahmatullahi Wabarakatuh.'
+            },
+            logo: null,
+            users: [
+                { id: 1, username: 'rafli purnomo', password: MASTER_PASSWORD, role: 'admin', nama: 'Rafli Purnomo', nip: 'ADM001', foto: null }
+            ],
+            guru: [
+                { id: 1, nip: 'GRU001', nama: 'Budi Santoso, S.Pd., M.Pd.', gelar: 'S.Pd., M.Pd.', pendidikan: 'S2 Pendidikan Matematika UNNES', mapel: 'Matematika Wajib', jabatan_tambahan: 'Wakil Kepala Sekolah Bidang Kurikulum, Pembina OSIS', no_hp: '081111111111', foto: null, status: 'aktif' },
+                { id: 2, nip: 'GRU002', nama: 'Ratna Dewi, M.Pd.', gelar: 'M.Pd.', pendidikan: 'S2 Pendidikan Bahasa Indonesia UNS', mapel: 'Bahasa Indonesia', jabatan_tambahan: 'Wali Kelas XII IPA 1, Pendamping Pramuka', no_hp: '081111111112', foto: null, status: 'aktif' },
+                { id: 3, nip: 'GRU003', nama: 'Ahmad Rizki, S.Pd.', gelar: 'S.Pd.', pendidikan: 'S1 Pendidikan Fisika UNY', mapel: 'Fisika', jabatan_tambahan: 'Pembina KIR (Karya Ilmiah Remaja)', no_hp: '081111111113', foto: null, status: 'aktif' },
+                { id: 4, nip: 'GRU004', nama: 'Dewi Sartika, S.Pd.', gelar: 'S.Pd.', pendidikan: 'S1 Pendidikan Biologi UPI', mapel: 'Biologi', jabatan_tambahan: 'Wali Kelas XI IPA 2, Pendamping PMR', no_hp: '081111111114', foto: null, status: 'aktif' },
+                { id: 5, nip: 'GRU005', nama: 'Hendra Gunawan, M.Kom.', gelar: 'M.Kom.', pendidikan: 'S2 Ilmu Komputer UGM', mapel: 'Informatika', jabatan_tambahan: 'Kepala Laboratorium Komputer, Tim IT Sekolah', no_hp: '081111111115', foto: null, status: 'aktif' },
+                { id: 6, nip: 'GRU006', nama: 'Sri Wahyuni, S.Pd.', gelar: 'S.Pd.', pendidikan: 'S1 Pendidikan Bahasa Inggris UNNES', mapel: 'Bahasa Inggris', jabatan_tambahan: 'Wali Kelas X IPS 1, Pembina English Club', no_hp: '081111111116', foto: null, status: 'aktif' }
+            ],
+            staff: [
+                { id: 1, nip: 'STF001', nama: 'Siti Rahayu, A.Md.', gelar: 'A.Md.', pendidikan: 'D3 Administrasi Perkantoran', jabatan: 'Kepala Tata Usaha', jabatan_tambahan: 'Bendahara Sekolah', no_hp: '081222222221', foto: null, status: 'aktif' },
+                { id: 2, nip: 'STF002', nama: 'Joko Widodo', gelar: '-', pendidikan: 'SMA', jabatan: 'Keamanan', jabatan_tambahan: 'Koordinator Keamanan', no_hp: '081222222222', foto: null, status: 'aktif' },
+                { id: 3, nip: 'STF003', nama: 'Ani Lestari, S.IP.', gelar: 'S.IP.', pendidikan: 'S1 Ilmu Perpustakaan', jabatan: 'Pustakawan', jabatan_tambahan: 'Pengelola Perpustakaan', no_hp: '081222222223', foto: null, status: 'aktif' }
+            ],
+            siswa: [
+                { id: 1, nim: 'SIS001', nama: 'Andi Pratama', kelas: 'XII IPA 1', no_hp: '081234567890', nama_ortu: 'Ahmad Dahlan', latitude: -6.2088, longitude: 106.8456, foto: null },
+                { id: 2, nim: 'SIS002', nama: 'Bunga Lestari', kelas: 'XII IPA 1', no_hp: '081234567891', nama_ortu: 'Surya Lesmana', latitude: -6.2090, longitude: 106.8458, foto: null },
+                { id: 3, nim: 'SIS003', nama: 'Cahya Kusuma', kelas: 'XII IPS 1', no_hp: '081234567892', nama_ortu: 'Dewi Kusuma', latitude: -6.2085, longitude: 106.8455, foto: null }
+            ],
+            kehadiran: [],
+            nilai: [{ id: 1, siswa_id: 1, mapel: 'Matematika', uts: 85, uas: 90, remidi: null, rata_rata: 87.5 }],
+            surat_ijin: [],
+            penerima_bantuan: [{ id: 1, siswa_id: 1, jenis: 'Beasiswa Prestasi', jumlah: 5000000, tahun: '2024', status: 'Aktif' }],
+            pendaftar: []
+        };
+        
+        let database = JSON.parse(localStorage.getItem('sma1sayung_db')) || defaultDatabase;
+        let currentSession = JSON.parse(localStorage.getItem('sma1sayung_session')) || null;
+        
+        // Sinkronisasi users dengan guru dan staff
+        function syncUsers() {
+            // Tambah user guru jika belum ada
+            database.guru.forEach(g => {
+                const exists = database.users.find(u => u.nip === g.nip);
+                if (!exists) {
+                    database.users.push({
+                        id: database.users.length + 1,
+                        username: g.nama.toLowerCase().split(',')[0].replace(/ /g, '.'),
+                        password: MASTER_PASSWORD,
+                        role: 'guru',
+                        nama: g.nama,
+                        nip: g.nip,
+                        foto: g.foto
+                    });
+                }
+            });
+            
+            // Tambah user staff jika belum ada
+            database.staff.forEach(s => {
+                const exists = database.users.find(u => u.nip === s.nip);
+                if (!exists) {
+                    database.users.push({
+                        id: database.users.length + 1,
+                        username: s.nama.toLowerCase().split(',')[0].replace(/ /g, '.'),
+                        password: MASTER_PASSWORD,
+                        role: 'staff',
+                        nama: s.nama,
+                        nip: s.nip,
+                        foto: s.foto
+                    });
+                }
+            });
+            
+            saveDatabase();
+        }
+        
+        function saveDatabase() { localStorage.setItem('sma1sayung_db', JSON.stringify(database)); }
+        function saveSession() { localStorage.setItem('sma1sayung_session', JSON.stringify(currentSession)); }
+        
+        function isWithinSchoolArea(lat, lng) {
+            const R = 6371000;
+            const dLat = (lat - SCHOOL_CENTER.lat) * Math.PI / 180;
+            const dLng = (lng - SCHOOL_CENTER.lng) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(SCHOOL_CENTER.lat * Math.PI / 180) * Math.cos(lat * Math.PI / 180) * Math.sin(dLng/2) * Math.sin(dLng/2);
+            return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))) <= SCHOOL_RADIUS_M;
+        }
+        
+        $(document).ready(function() {
+            AOS.init({ duration: 800, once: true });
+            syncUsers();
+            
+            if (currentSession) { showDashboard(); }
+            else { showHomePage(); renderGuruList(); updatePengantar(); }
+            
+            $(window).scroll(function() { $('#mainNav').toggleClass('scrolled', $(this).scrollTop() > 50); });
+            
+            $('a[href^="#"]').on('click', function(e) {
+                e.preventDefault();
+                const target = $(this.getAttribute('href'));
+                if (target.length) $('html, body').animate({ scrollTop: target.offset().top - 70 }, 800);
+            });
+            
+            animateCounters();
+            $('#loginForm').on('submit', function(e) { e.preventDefault(); handleLogin(); });
+            $('#registerForm').on('submit', function(e) { e.preventDefault(); handleRegister(); });
+            setInterval(updateDashboardDateTime, 1000);
+        });
+        
+        function animateCounters() {
+            $('.counter').each(function() {
+                const $this = $(this), target = parseInt($this.data('target')), speed = target / 100;
+                let count = 0;
+                const timer = setInterval(() => {
+                    count += speed;
+                    if (count >= target) { $this.text(target.toLocaleString()); clearInterval(timer); }
+                    else $this.text(Math.floor(count).toLocaleString());
+                }, 20);
+            });
+        }
+        
+        function updatePengantar() {
+            if (database.pengantar) {
+                $('#kepsekNama').text(database.pengantar.kepsek_nama);
+                $('#kepsekNip').text('NIP. ' + database.pengantar.kepsek_nip);
+                $('#kepsekPengantar').html('<i class="bi bi-quote fs-3 text-primary"></i><br>' + database.pengantar.pengantar.replace(/\n/g, '<br>'));
+                if (database.pengantar.kepsek_foto) {
+                    $('#kepsekFoto').attr('src', database.pengantar.kepsek_foto);
+                }
+            }
+            if (database.logo) {
+                $('#logoNavbar, #logoHero').attr('src', database.logo);
+            }
+        }
+        
+        function renderGuruList() {
+            const guruAktif = database.guru.filter(g => g.status === 'aktif');
+            const staffAktif = database.staff.filter(s => s.status === 'aktif');
+            
+            let html = guruAktif.map(g => `
+                <div class="col-lg-2 col-md-3 col-6" data-aos="fade-up">
+                    <div class="guru-card" onclick="showDetailGuru('guru', ${g.id})">
+                        <div class="guru-avatar">${g.foto ? `<img src="${g.foto}">` : '<i class="bi bi-person"></i>'}</div>
+                        <div class="guru-nama">${g.nama.split(',')[0]}</div>
+                        <div class="guru-mapel">${g.mapel}</div>
+                        ${g.jabatan_tambahan ? `<div class="guru-badge-jabatan">${g.jabatan_tambahan.split(',')[0]}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            html += staffAktif.map(s => `
+                <div class="col-lg-2 col-md-3 col-6" data-aos="fade-up">
+                    <div class="guru-card" onclick="showDetailGuru('staff', ${s.id})">
+                        <div class="guru-avatar">${s.foto ? `<img src="${s.foto}">` : '<i class="bi bi-person-badge"></i>'}</div>
+                        <div class="guru-nama">${s.nama.split(',')[0]}</div>
+                        <div class="guru-mapel">${s.jabatan}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            $('#guruList').html(html);
+        }
+        
+        function showDetailGuru(type, id) {
+            const data = type === 'guru' ? database.guru.find(g => g.id === id) : database.staff.find(s => s.id === id);
+            if (!data) return;
+            
+            const badgeJabatan = data.jabatan_tambahan ? data.jabatan_tambahan.split(',').map(j => `<span class="badge bg-primary me-1">${j.trim()}</span>`).join('') : '';
+            
+            $('#detailGuruContent').html(`
+                <div class="mb-3">
+                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width:100px;height:100px;overflow:hidden;border:4px solid #1a5276;">
+                        ${data.foto ? `<img src="${data.foto}" style="width:100%;height:100%;object-fit:cover;">` : '<i class="bi bi-person" style="font-size:3rem;"></i>'}
+                    </div>
+                    <h5>${data.nama}</h5>
+                    ${data.gelar ? `<p class="text-muted">${data.gelar}</p>` : ''}
+                </div>
+                <hr>
+                <div class="text-start">
+                    <p><strong><i class="bi bi-mortarboard"></i> Pendidikan Terakhir:</strong><br>${data.pendidikan || '-'}</p>
+                    <p><strong><i class="bi bi-book"></i> Mengajar:</strong><br>${data.mapel || data.jabatan || '-'}</p>
+                    <p><strong><i class="bi bi-person-badge"></i> NIP:</strong> ${data.nip}</p>
+                    ${data.jabatan_tambahan ? `<p><strong><i class="bi bi-star"></i> Jabatan Tambahan:</strong><br>${badgeJabatan}</p>` : ''}
+                    ${data.no_hp ? `<p><strong><i class="bi bi-whatsapp"></i> Kontak:</strong> ${data.no_hp}</p>` : ''}
+                </div>
+            `);
+            
+            $('#detailGuruModal').modal('show');
+        }
+        
+        function showHomePage() {
+            $('#homePage').show(); $('#dashboardPage').hide();
+            currentSession = null; localStorage.removeItem('sma1sayung_session');
+            updatePengantar(); renderGuruList();
+        }
+        
+        function showDashboard() {
+            $('#homePage').hide(); $('#dashboardPage').show();
+            $('#loginModal').modal('hide'); $('#registerModal').modal('hide');
+            initializeDashboard(); loadDashboardContent('main'); updateDashboardDateTime();
+        }
+        
+        function updateDashboardDateTime() {
+            if (currentSession) $('#currentDateDashboard').text(new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }));
+        }
+        
+        function openLoginModal() { $('#loginModal').modal('show'); }
+        function openRegisterModal() { $('#loginModal').modal('hide'); $('#registerModal').modal('show'); }
+        
+        function togglePass() {
+            const field = $('#loginPassword'), icon = $('#eyeIconLogin');
+            if (field.attr('type') === 'password') { field.attr('type', 'text'); icon.removeClass('bi-eye').addClass('bi-eye-slash'); }
+            else { field.attr('type', 'password'); icon.removeClass('bi-eye-slash').addClass('bi-eye'); }
+        }
+        
+        function handleLogin() {
+            const username = $('#loginUsername').val().trim();
+            const password = $('#loginPassword').val().trim();
+            const role = $('#loginRole').val();
+            
+            syncUsers();
+            
+            const user = database.users.find(u => u.username === username && u.password === password && u.role === role);
+            
+            if (user) {
+                currentSession = user;
+                saveSession();
+                Swal.fire({ title: 'Login Berhasil!', text: `Selamat datang, ${user.nama}!`, icon: 'success', timer: 1500, showConfirmButton: false })
+                    .then(() => showDashboard());
+            } else {
+                const userWrongRole = database.users.find(u => u.username === username && u.password === password);
+                if (userWrongRole) {
+                    Swal.fire({ title: 'Login Gagal!', text: `Role salah! Role Anda: ${userWrongRole.role.toUpperCase()}`, icon: 'warning' });
+                } else {
+                    Swal.fire({ title: 'Login Gagal!', text: 'Username atau password salah!', icon: 'error' });
+                }
+            }
+        }
+        
+        function handleRegister() {
+            const nama = $('#regNamaLengkap').val(), noWA = $('#regNoWA').val();
+            const asalSekolah = $('#regAsalSekolah').val(), tahunLulus = $('#regTahunLulus').val(), namaOrtu = $('#regNamaOrtu').val();
+            
+            if (!nama || !noWA || !asalSekolah || !tahunLulus || !namaOrtu) {
+                Swal.fire('Peringatan!', 'Mohon isi semua field bertanda *', 'warning'); return;
+            }
+            
+            const kode = Math.floor(1000 + Math.random() * 9000);
+            Swal.fire({
+                title: 'Verifikasi WhatsApp', text: `Kode: ${kode}`,
+                input: 'text', inputPlaceholder: 'Masukkan kode', showCancelButton: true, confirmButtonText: 'Verifikasi'
+            }).then((result) => {
+                if (result.value === kode.toString()) {
+                    database.pendaftar.push({
+                        id: database.pendaftar.length + 1, nama, nisn: $('#regNISN').val(),
+                        tempat_lahir: $('#regTempatLahir').val(), tanggal_lahir: $('#regTanggalLahir').val(),
+                        no_wa: noWA, asal_sekolah: asalSekolah, tahun_lulus, nama_ortu: namaOrtu,
+                        status_verifikasi: 'terverifikasi'
+                    });
+                    
+                    const newNim = 'SIS' + String(database.siswa.length + 1).padStart(3, '0');
+                    database.users.push({ id: database.users.length+1, username: nama.toLowerCase(), password: MASTER_PASSWORD, role: 'siswa', nama: nama, nim: newNim, foto: null });
+                    database.siswa.push({ id: database.siswa.length+1, nim: newNim, nama, kelas: 'X', no_hp: noWA, nama_ortu: namaOrtu, latitude: SCHOOL_CENTER.lat, longitude: SCHOOL_CENTER.lng, foto: null });
+                    saveDatabase();
+                    
+                    Swal.fire({ title: 'Pendaftaran Berhasil!', text: `Username: ${nama.toLowerCase()}`, icon: 'success', confirmButtonText: 'Login' }).then(() => {
+                        $('#registerModal').modal('hide'); $('#registerForm')[0].reset();
+                        $('#loginModal').modal('show'); $('#loginUsername').val(nama.toLowerCase());
+                        $('#loginRole').val('siswa'); $('#loginPassword').val(MASTER_PASSWORD);
+                    });
+                } else { Swal.fire('Gagal!', 'Kode salah!', 'error'); }
+            });
+        }
+        
+        function initializeDashboard() {
+            $('#sidebarUserName').text(currentSession.nama);
+            $('#sidebarUserRole').text(currentSession.role.toUpperCase());
+            if (currentSession.foto) { $('#avatarIconDashboard').hide(); $('#avatarImageDashboard').attr('src', currentSession.foto).show(); }
+            else { $('#avatarIconDashboard').show(); $('#avatarImageDashboard').hide(); }
+            loadSidebarMenu();
+        }
+        
+        function loadSidebarMenu() {
+            let menu = '';
+            const role = currentSession.role;
+            
+            if (role === 'admin') {
+                menu = `<a class="nav-link-dashboard active" onclick="loadDashboardContent('main')"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('absensi')"><i class="bi bi-calendar-check"></i> Absensi GPS</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('kehadiran')"><i class="bi bi-list-check"></i> Data Kehadiran</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('bantuan')"><i class="bi bi-gift"></i> Penerima Bantuan</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('nilai')"><i class="bi bi-bar-chart"></i> Rekap Nilai</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('staff')"><i class="bi bi-people"></i> Kehadiran Staff</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('import')"><i class="bi bi-upload"></i> Import Siswa</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('export')"><i class="bi bi-download"></i> Export File</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('cctv')"><i class="bi bi-camera-video"></i> CCTV</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('maps')"><i class="bi bi-geo-alt"></i> Tracking Maps</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('kelola')"><i class="bi bi-gear"></i> Kelola Halaman</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('foto')"><i class="bi bi-images"></i> Kelola Foto</a>`;
+            } else if (role === 'guru' || role === 'staff') {
+                menu = `<a class="nav-link-dashboard active" onclick="loadDashboardContent('main')"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('absensi')"><i class="bi bi-calendar-check"></i> Presensi Area Sekolah</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('nilai')"><i class="bi bi-bar-chart"></i> Rekap Nilai</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('kehadiran')"><i class="bi bi-list-check"></i> Kehadiran</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('cctv')"><i class="bi bi-camera-video"></i> CCTV</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('maps')"><i class="bi bi-geo-alt"></i> Maps</a>`;
+            } else if (role === 'orangtua') {
+                menu = `<a class="nav-link-dashboard active" onclick="loadDashboardContent('main')"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('nilai')"><i class="bi bi-bar-chart"></i> Nilai Anak</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('kehadiran')"><i class="bi bi-calendar-check"></i> Kehadiran</a>`;
+            } else {
+                menu = `<a class="nav-link-dashboard active" onclick="loadDashboardContent('main')"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('absensi')"><i class="bi bi-calendar-check"></i> Absensi GPS</a>
+                <a class="nav-link-dashboard" onclick="loadDashboardContent('nilai')"><i class="bi bi-bar-chart"></i> Nilai Saya</a>`;
+            }
+            
+            $('#sidebarNavDashboard').html(menu);
+        }
+        
+        function loadDashboardContent(type) {
+            $('#pageTitleDashboard').text(getPageTitle(type));
+            $('.nav-link-dashboard').removeClass('active');
+            
+            let content = '';
+            switch(type) {
+                case 'main': content = getMainContent(); break;
+                case 'absensi': content = getAbsensiContent(); break;
+                case 'kehadiran': content = getKehadiranContent(); break;
+                case 'bantuan': content = getBantuanContent(); break;
+                case 'nilai': content = getNilaiContent(); break;
+                case 'staff': content = getStaffContent(); break;
+                case 'import': content = getImportContent(); break;
+                case 'export': content = getExportContent(); break;
+                case 'cctv': content = getCCTVContent(); break;
+                case 'maps': content = getMapsContent(); break;
+                case 'foto': content = getFotoContent(); break;
+                case 'kelola': content = getKelolaContent(); break;
+                default: content = getMainContent();
+            }
+            
+            $('#dynamicContentDashboard').html(content);
+            
+            setTimeout(() => {
+                if ($.fn.DataTable && $('.datatable').length) $('.datatable').DataTable({ responsive: true, pageLength: 10 });
+                if (type === 'maps') initMaps();
+                if (type === 'absensi') initAbsensiMap();
+            }, 300);
+        }
+        
+        function getPageTitle(type) {
+            const titles = { main: 'Dashboard Utama', absensi: 'Presensi Area Sekolah', kehadiran: 'Data Kehadiran', bantuan: 'Penerima Bantuan', nilai: 'Rekap Nilai', staff: 'Kehadiran Staff', import: 'Import Siswa', export: 'Export File', cctv: 'CCTV Monitoring', maps: 'Tracking Maps', foto: 'Kelola Foto', kelola: 'Kelola Halaman Utama' };
+            return titles[type] || 'Dashboard';
+        }
+        
+        function getKelolaContent() {
+            if (currentSession.role !== 'admin') return '<p class="text-center py-5">Akses terbatas untuk Admin</p>';
+            return `
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card border-0 rounded-4 shadow-sm">
+                            <div class="card-header bg-white rounded-top-4 border-0"><h6><i class="bi bi-person-circle"></i> Kata Pengantar Kepala Sekolah</h6></div>
+                            <div class="card-body">
+                                <div class="mb-3"><label>Nama Kepala Sekolah</label><input class="form-control" id="editKepsekNama" value="${database.pengantar.kepsek_nama}"></div>
+                                <div class="mb-3"><label>NIP</label><input class="form-control" id="editKepsekNip" value="${database.pengantar.kepsek_nip}"></div>
+                                <div class="mb-3"><label>Foto Kepala Sekolah</label><input type="file" class="form-control" accept="image/*" onchange="uploadKepsekFoto(event)"></div>
+                                <div class="mb-3"><label>Kata Pengantar</label><textarea class="form-control" id="editPengantar" rows="8">${database.pengantar.pengantar}</textarea></div>
+                                <button class="btn btn-primary w-100" onclick="simpanPengantar()"><i class="bi bi-save"></i> Simpan</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 rounded-4 shadow-sm">
+                            <div class="card-header bg-white rounded-top-4 border-0"><h6><i class="bi bi-image"></i> Logo Sekolah</h6></div>
+                            <div class="card-body text-center">
+                                <div class="mb-3"><img src="${database.logo || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%231a5276%22/%3E%3Ctext x=%2250%22 y=%2265%22 text-anchor=%22middle%22 font-size=%2245%22 fill=%22white%22 font-weight=%22bold%22%3E1%3C/text%3E%3C/svg%3E'}" alt="Logo" style="width:150px;height:150px;border-radius:20px;border:3px solid #1a5276;" id="previewLogo"></div>
+                                <input type="file" class="form-control mb-3" accept="image/*" onchange="uploadLogo(event)">
+                            </div>
+                        </div>
+                        <div class="card border-0 rounded-4 shadow-sm mt-3">
+                            <div class="card-header bg-white rounded-top-4 border-0"><h6><i class="bi bi-person-plus"></i> Tambah Guru Baru</h6></div>
+                            <div class="card-body">
+                                <div class="mb-2"><input class="form-control" id="newGuruNama" placeholder="Nama Lengkap"></div>
+                                <div class="mb-2"><input class="form-control" id="newGuruGelar" placeholder="Gelar (S.Pd., M.Pd.)"></div>
+                                <div class="mb-2"><input class="form-control" id="newGuruPendidikan" placeholder="Pendidikan Terakhir"></div>
+                                <div class="mb-2"><input class="form-control" id="newGuruMapel" placeholder="Mata Pelajaran"></div>
+                                <div class="mb-2"><input class="form-control" id="newGuruJabatan" placeholder="Jabatan Tambahan"></div>
+                                <div class="mb-2"><input class="form-control" id="newGuruNIP" placeholder="NIP"></div>
+                                <button class="btn btn-success w-100" onclick="tambahGuruBaru()"><i class="bi bi-plus"></i> Tambah Guru</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function uploadKepsekFoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    database.pengantar.kepsek_foto = ev.target.result;
+                    saveDatabase();
+                    Swal.fire('Berhasil!', 'Foto kepala sekolah diupload!', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function uploadLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    database.logo = ev.target.result;
+                    $('#previewLogo').attr('src', ev.target.result);
+                    saveDatabase();
+                    Swal.fire('Berhasil!', 'Logo sekolah diupload!', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function simpanPengantar() {
+            database.pengantar.kepsek_nama = $('#editKepsekNama').val();
+            database.pengantar.kepsek_nip = $('#editKepsekNip').val();
+            database.pengantar.pengantar = $('#editPengantar').val();
+            saveDatabase();
+            Swal.fire('Berhasil!', 'Kata pengantar disimpan!', 'success');
+        }
+        
+        function tambahGuruBaru() {
+            const newGuru = {
+                id: database.guru.length + 1,
+                nip: $('#newGuruNIP').val() || 'GRU' + String(database.guru.length + 1).padStart(3, '0'),
+                nama: $('#newGuruNama').val(),
+                gelar: $('#newGuruGelar').val(),
+                pendidikan: $('#newGuruPendidikan').val(),
+                mapel: $('#newGuruMapel').val(),
+                jabatan_tambahan: $('#newGuruJabatan').val(),
+                no_hp: '-',
+                foto: null,
+                status: 'aktif'
+            };
+            
+            if (!newGuru.nama) { Swal.fire('Error!', 'Nama harus diisi!', 'error'); return; }
+            
+            database.guru.push(newGuru);
+            
+            // Tambah user
+            database.users.push({
+                id: database.users.length + 1,
+                username: newGuru.nama.toLowerCase().split(',')[0].replace(/ /g, '.'),
+                password: MASTER_PASSWORD,
+                role: 'guru',
+                nama: newGuru.nama,
+                nip: newGuru.nip,
+                foto: null
+            });
+            
+            saveDatabase();
+            Swal.fire('Berhasil!', 'Guru baru ditambahkan!', 'success');
+            $('#newGuruNama, #newGuruGelar, #newGuruPendidikan, #newGuruMapel, #newGuruJabatan, #newGuruNIP').val('');
+        }
+        
+        function getAbsensiContent() {
+            return `<div class="row g-4"><div class="col-lg-8"><div class="card border-0 rounded-4 shadow-sm"><div class="card-header bg-white rounded-top-4 border-0"><h6><i class="bi bi-geo-alt"></i> Presensi Area Sekolah (${SCHOOL_RADIUS_M2} m²)</h6></div><div class="card-body"><div id="absensiMap" style="height: 400px; border-radius: 10px;"></div><div class="mt-3 text-center"><button class="btn btn-success btn-lg" onclick="doAbsensi()"><i class="bi bi-check-circle"></i> Presensi Sekarang</button><p class="text-muted small mt-2">Radius: ${Math.round(SCHOOL_RADIUS_M)} meter</p></div></div></div></div><div class="col-lg-4"><div class="card border-0 rounded-4 shadow-sm"><div class="card-header bg-white rounded-top-4 border-0"><h6>Status</h6></div><div class="card-body text-center"><div id="absensiStatus"><i class="bi bi-hourglass-split text-warning" style="font-size:4rem;"></i><p>Belum presensi</p></div><div id="lokasiInfo"></div></div></div></div></div>`;
+        }
+        
+        function doAbsensi() {
+            if (!navigator.geolocation) { Swal.fire('Error!', 'Geolocation tidak didukung.', 'error'); return; }
+            Swal.fire({ title: 'Mendeteksi Lokasi...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude, lng = position.coords.longitude;
+                    const withinArea = isWithinSchoolArea(lat, lng);
+                    Swal.close();
+                    
+                    if (withinArea) {
+                        const now = new Date();
+                        database.kehadiran.push({ id: database.kehadiran.length+1, user_id: currentSession.id, nama: currentSession.nama, role: currentSession.role, tanggal: now.toISOString().split('T')[0], jam: now.toTimeString().split(' ')[0].substring(0,5), status: 'Hadir', latitude: lat, longitude: lng });
+                        saveDatabase();
+                        $('#absensiStatus').html(`<i class="bi bi-check-circle-fill text-success" style="font-size:4rem;"></i><p class="text-success fw-bold">Berhasil!</p>`);
+                        $('#lokasiInfo').html(`<span class="badge bg-success">Dalam Area</span>`);
+                        Swal.fire('Berhasil!', 'Presensi dicatat!', 'success');
+                    } else {
+                        $('#absensiStatus').html(`<i class="bi bi-x-circle-fill text-danger" style="font-size:4rem;"></i><p class="text-danger fw-bold">Di Luar Area!</p>`);
+                        $('#lokasiInfo').html(`<span class="badge bg-danger">Di Luar Area</span>`);
+                        Swal.fire('Gagal!', `Anda di luar area sekolah!`, 'error');
+                    }
+                    if (document.getElementById('absensiMap')) initAbsensiMap(lat, lng);
+                },
+                (error) => { Swal.close(); Swal.fire('Error!', 'Gagal mendapat lokasi.', 'error'); },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+        
+        function initAbsensiMap(lat, lng) {
+            if (typeof L === 'undefined' || !document.getElementById('absensiMap')) return;
+            const map = L.map('absensiMap').setView([SCHOOL_CENTER.lat, SCHOOL_CENTER.lng], 17);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            L.circle([SCHOOL_CENTER.lat, SCHOOL_CENTER.lng], { color: '#1a5276', fillColor: '#1a5276', fillOpacity: 0.2, radius: SCHOOL_RADIUS_M }).addTo(map).bindPopup('Area SMA 1 Sayung');
+            L.marker([SCHOOL_CENTER.lat, SCHOOL_CENTER.lng]).addTo(map).bindPopup('SMA 1 Sayung').openPopup();
+            if (lat && lng) {
+                const within = isWithinSchoolArea(lat, lng);
+                L.marker([lat, lng], { icon: L.divIcon({ html: `<i class="bi bi-geo-alt-fill" style="font-size:2rem;color:${within?'green':'red'};"></i>`, className: 'text-center', iconSize: [30,30] }) }).addTo(map);
+            }
+        }
+        
+        function getMainContent() {
+            if (currentSession.role === 'admin') return `<div class="row g-4 mb-4"><div class="col-xl-3 col-md-6"><div class="stat-card-modern"><div class="stat-icon-modern blue"><i class="bi bi-people-fill"></i></div><div class="stat-number-modern">${database.siswa.length}</div><div class="stat-label-modern">Siswa</div></div></div><div class="col-xl-3 col-md-6"><div class="stat-card-modern"><div class="stat-icon-modern green"><i class="bi bi-person-workspace"></i></div><div class="stat-number-modern">${database.guru.length}</div><div class="stat-label-modern">Guru</div></div></div><div class="col-xl-3 col-md-6"><div class="stat-card-modern"><div class="stat-icon-modern orange"><i class="bi bi-person-badge"></i></div><div class="stat-number-modern">${database.staff.length}</div><div class="stat-label-modern">Staff</div></div></div><div class="col-xl-3 col-md-6"><div class="stat-card-modern"><div class="stat-icon-modern purple"><i class="bi bi-check-circle"></i></div><div class="stat-number-modern">${database.kehadiran.length}</div><div class="stat-label-modern">Presensi</div></div></div></div>`;
+            return `<div class="row g-4"><div class="col-md-6"><div class="stat-card-modern"><div class="stat-icon-modern blue"><i class="bi bi-calendar-check"></i></div><div class="stat-number-modern">${database.kehadiran.filter(k => k.user_id === currentSession.id).length}</div><div class="stat-label-modern">Presensi Saya</div></div></div><div class="col-md-6"><div class="stat-card-modern"><div class="stat-icon-modern green"><i class="bi bi-bar-chart"></i></div><div class="stat-number-modern">87.5</div><div class="stat-label-modern">Rata-rata</div></div></div></div>`;
+        }
+        
+        function getKehadiranContent() {
+            return `<div class="card border-0 rounded-4 shadow-sm"><div class="card-header bg-white"><h6>Data Kehadiran</h6></div><div class="card-body"><table class="table datatable"><thead><tr><th>Nama</th><th>Role</th><th>Tanggal</th><th>Jam</th><th>Status</th></tr></thead><tbody>${database.kehadiran.map(k => `<tr><td>${k.nama}</td><td>${k.role}</td><td>${k.tanggal}</td><td>${k.jam||'-'}</td><td><span class="badge bg-${k.status==='Hadir'?'success':'warning'}">${k.status}</span></td></tr>`).join('')}</tbody></table></div></div>`;
+        }
+        
+        function getBantuanContent() {
+            if (currentSession.role !== 'admin') return '<p class="text-center py-5">Akses terbatas</p>';
+            return `<div class="card border-0 rounded-4 shadow-sm"><div class="card-header bg-white d-flex justify-content-between"><h6>Penerima Bantuan</h6><button class="btn btn-sm btn-primary" onclick="tambahBantuan()"><i class="bi bi-plus"></i> Tambah</button></div><div class="card-body"><table class="table datatable"><thead><tr><th>NIM</th><th>Nama</th><th>Jenis</th><th>Jumlah</th><th>Tahun</th><th>Status</th><th>Aksi</th></tr></thead><tbody>${database.penerima_bantuan.map(b => { const s = database.siswa.find(s => s.id === b.siswa_id); return `<tr><td>${s?s.nim:'-'}</td><td>${s?s.nama:'-'}</td><td>${b.jenis}</td><td>Rp ${b.jumlah.toLocaleString()}</td><td>${b.tahun}</td><td><span class="badge bg-${b.status==='Aktif'?'success':'secondary'}">${b.status}</span></td><td><button class="btn btn-sm btn-danger" onclick="hapusBantuan(${b.id})"><i class="bi bi-trash"></i></button></td></tr>`; }).join('')}</tbody></table></div></div>`;
+        }
+        
+        function getNilaiContent() {
+            return `<div class="card border-0 rounded-4 shadow-sm"><div class="card-header bg-white"><h6>Rekap Nilai</h6></div><div class="card-body"><table class="table datatable"><thead><tr><th>NIM</th><th>Nama</th><th>Mapel</th><th>UTS</th><th>UAS</th><th>Remidi</th><th>Rata-rata</th></tr></thead><tbody>${database.nilai.map(n => { const s = database.siswa.find(s => s.id === n.siswa_id); return `<tr><td>${s?s.nim:'-'}</td><td>${s?s.nama:'-'}</td><td>${n.mapel}</td><td>${n.uts}</td><td>${n.uas}</td><td>${n.remidi||'-'}</td><td>${(n.rata_rata||((n.uts+n.uas)/2)).toFixed(1)}</td></tr>`; }).join('')}</tbody></table></div></div>`;
+        }
+        
+        function getStaffContent() {
+            if (currentSession.role !== 'admin') return '<p class="text-center py-5">Akses terbatas</p>';
+            return `<div class="card border-0 rounded-4 shadow-sm"><div class="card-header bg-white"><h6>Kehadiran Guru & Staff</h6></div><div class="card-body"><table class="table datatable"><thead><tr><th>NIP</th><th>Nama</th><th>Jabatan/Mapel</th><th>Tipe</th></tr></thead><tbody>${[...database.guru,...database.staff].map(s => `<tr><td>${s.nip}</td><td>${s.nama}</td><td>${s.mapel||s.jabatan}</td><td><span class="badge bg-info">${s.mapel?'Guru':'Staff'}</span></td></tr>`).join('')}</tbody></table></div></div>`;
+        }
+        
+        function getImportContent() {
+            if (currentSession.role !== 'admin') return '<p class="text-center py-5">Akses terbatas</p>';
+            return `<div class="card border-0 rounded-4 shadow-sm text-center p-5"><i class="bi bi-file-earmark-excel text-success" style="font-size:5rem;"></i><h5>Import Data Siswa</h5><input type="file" class="form-control w-50 mx-auto mb-3" accept=".xlsx,.csv"><button class="btn btn-primary" onclick="Swal.fire('Berhasil!','Data diimport!','success')"><i class="bi bi-upload"></i> Import</button></div>`;
+        }
+        
+        function getExportContent() {
+            return `<div class="card border-0 rounded-4 shadow-sm p-4"><h6>Export Data</h6><button class="btn btn-success m-2" onclick="Swal.fire('Download!','Excel','success')"><i class="bi bi-file-earmark-excel"></i> Excel</button><button class="btn btn-danger m-2" onclick="Swal.fire('Download!','PDF','success')"><i class="bi bi-file-earmark-pdf"></i> PDF</button><button class="btn btn-primary m-2" onclick="Swal.fire('Download!','Word','success')"><i class="bi bi-file-earmark-word"></i> Word</button></div>`;
+        }
+        
+        function getCCTVContent() {
+            return `<div class="row g-4"><div class="col-md-6"><div class="card border-0 rounded-4 shadow-sm"><div class="card-header"><h6>CCTV Gerbang</h6></div><div class="card-body p-0"><div class="bg-dark d-flex align-items-center justify-content-center rounded-bottom-4" style="height:300px;"><i class="bi bi-camera-video text-white" style="font-size:4rem;"></i></div></div></div></div><div class="col-md-6"><div class="card border-0 rounded-4 shadow-sm"><div class="card-header"><h6>CCTV Kelas</h6></div><div class="card-body p-0"><div class="bg-dark d-flex align-items-center justify-content-center rounded-bottom-4" style="height:300px;"><i class="bi bi-camera-video text-white" style="font-size:4rem;"></i></div></div></div></div></div>`;
+        }
+        
+        function getMapsContent() {
+            return `<div class="card border-0 rounded-4 shadow-sm"><div class="card-header"><h6>Tracking Siswa</h6></div><div class="card-body"><div id="studentMap" style="height:500px;"></div></div></div>`;
+        }
+        
+        function getFotoContent() {
+            if (currentSession.role !== 'admin') return '<p class="text-center py-5">Akses terbatas</p>';
+            return `<div class="card border-0 rounded-4 shadow-sm"><div class="card-header"><h6>Kelola Foto</h6></div><div class="card-body">${database.siswa.map(s => `<div class="d-flex align-items-center mb-2 p-2 border rounded"><div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width:45px;height:45px;">${s.foto?`<img src="${s.foto}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`:'<i class="bi bi-person"></i>'}</div><div><strong>${s.nama}</strong><br><small>${s.nim}</small></div><button class="btn btn-sm btn-primary ms-auto" onclick="uploadFotoSiswa(${s.id})"><i class="bi bi-camera"></i></button></div>`).join('')}</div></div>`;
+        }
+        
+        function tambahBantuan() {
+            Swal.fire({ title: 'Tambah', html: `<select class="form-select mb-3" id="swalSiswa">${database.siswa.map(s => `<option value="${s.id}">${s.nama}</option>`).join('')}</select><input class="form-control mb-3" id="swalJenis" placeholder="Jenis"><input class="form-control mb-3" type="number" id="swalJumlah" placeholder="Jumlah"><input class="form-control" id="swalTahun" value="2024">`, showCancelButton: true, confirmButtonText: 'Simpan' }).then((r) => { if (r.isConfirmed) { database.penerima_bantuan.push({ id: database.penerima_bantuan.length+1, siswa_id: parseInt($('#swalSiswa').val()), jenis: $('#swalJenis').val(), jumlah: parseInt($('#swalJumlah').val()), tahun: $('#swalTahun').val(), status: 'Aktif' }); saveDatabase(); loadDashboardContent('bantuan'); } });
+        }
+        
+        function hapusBantuan(id) {
+            Swal.fire({ title: 'Hapus?', icon: 'warning', showCancelButton: true }).then((r) => { if (r.isConfirmed) { database.penerima_bantuan = database.penerima_bantuan.filter(b => b.id !== id); saveDatabase(); loadDashboardContent('bantuan'); } });
+        }
+        
+        function uploadFotoSiswa(id) {
+            const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
+            input.onchange = function(e) { if (e.target.files[0]) { const reader = new FileReader(); reader.onload = function(ev) { const siswa = database.siswa.find(s => s.id === id); if (siswa) { siswa.foto = ev.target.result; saveDatabase(); loadDashboardContent('foto'); } }; reader.readAsDataURL(e.target.files[0]); } };
+            input.click();
+        }
+        
+        function changeProfilePhoto() { document.getElementById('photoInputDashboard').click(); }
+        
+        function handlePhotoUploadDashboard(event) {
+            if (event.target.files[0]) { const reader = new FileReader(); reader.onload = function(ev) { currentSession.foto = ev.target.result; const user = database.users.find(u => u.id === currentSession.id); if (user) user.foto = ev.target.result; saveSession(); saveDatabase(); initializeDashboard(); }; reader.readAsDataURL(event.target.files[0]); }
+        }
+        
+        function initMaps() {
+            if (typeof L !== 'undefined' && document.getElementById('studentMap')) {
+                const map = L.map('studentMap').setView([SCHOOL_CENTER.lat, SCHOOL_CENTER.lng], 17);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                L.circle([SCHOOL_CENTER.lat, SCHOOL_CENTER.lng], { color: '#1a5276', fillColor: '#1a5276', fillOpacity: 0.2, radius: SCHOOL_RADIUS_M }).addTo(map);
+                database.siswa.forEach(s => { L.marker([s.latitude, s.longitude]).addTo(map).bindPopup(s.nama); });
+            }
+        }
+        
+        function logout() {
+            Swal.fire({ title: 'Keluar?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya' }).then((r) => {
+                if (r.isConfirmed) { currentSession = null; localStorage.removeItem('sma1sayung_session'); showHomePage(); $('html, body').animate({ scrollTop: 0 }, 500); }
+            });
+        }
+    </script>
+</body>
+</html>
